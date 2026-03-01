@@ -40,6 +40,7 @@ DevOps
 
 
 # Project Structure
+```text
 task-manager/
 │
 ├── alembic/
@@ -61,6 +62,7 @@ task-manager/
 ├── entrypoint.sh
 ├── requirements.txt
 └── README.md
+```
 
 
 # Getting Started   
