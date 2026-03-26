@@ -12,3 +12,5 @@ venv/
 *.log
 tests/
 pytest_cache/
+frontend/
+node_modules/
