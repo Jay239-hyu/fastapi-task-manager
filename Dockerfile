@@ -1,33 +1,37 @@
 # Base image
 FROM python:3.11-slim
 
-# Prevent python from writing pyc files
+# Prevent python from writing pyc files & buffering logs
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# System dependencies (optional but recommended)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    postgresql-client \
+    libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first (for caching)
+# Copy only requirements first (better caching)
 COPY requirements.txt .
 
-# Just upgrade pip to avoid old pip usage
+# Upgrade pip
 RUN pip install --upgrade pip
 
-# Install python dependencies
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project and change script file permission
-COPY . .
+# Copy ONLY required backend code (avoid frontend bloat)
+COPY app ./app
+COPY alembic ./alembic
+COPY alembic.ini .
+COPY entrypoint.sh .
+
+# Give execution permission
 RUN chmod +x /app/entrypoint.sh
 
-# Expose port
-EXPOSE 8000
-
+# Render dynamically assigns PORT → use env var
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
