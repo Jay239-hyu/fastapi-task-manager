@@ -34,4 +34,4 @@ COPY entrypoint.sh .
 RUN chmod +x /app/entrypoint.sh
 
 # Render dynamically assigns PORT → use env var
-CMD ["sh", "-c", "echo Starting app && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
