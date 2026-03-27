@@ -1,166 +1,256 @@
+# 🚀 FastAPI Task Manager (Production Ready)
 
-# FastAPI-Task-Manager
-Task Manager backend built with FastAPI, fully containerized using Docker, with Nginx as a reverse proxy. Designed for scalability and production readiness.
+A fully functional **Task Manager API** built using FastAPI, deployed with Docker, connected to Supabase (PostgreSQL), and integrated with a live frontend (Vercel).
 
+👉 Designed with **real-world deployment, scalability, and clean architecture** in mind.
 
-# Features
-CRUD Operations
+---
 
-JWT Token Authentication
+# ✨ Features
 
-Fully Dockerized system
+* 🔐 JWT Authentication (Login system)
+* 📝 Full CRUD (Create, Read, Update, Delete tasks)
+* 🧠 Clean layered architecture (routers → services → db)
+* 🐳 Dockerized backend
+* ☁️ Live deployment (Render)
+* 🌐 Frontend integration (Vercel)
+* 🗄️ PostgreSQL (Supabase cloud DB)
+* ⚙️ Alembic migrations
+* 🛡️ CORS configured for frontend communication
 
-Nginx reverse proxy
+---
 
-Scalable architecture
+# 🧱 Tech Stack
 
-SSL support (planned)
+## Backend
 
+* FastAPI
+* Python 3.11
 
-# Tech Stack
-Backend
+## Database
 
-    FastAPI
+* PostgreSQL (Supabase)
 
-    Python
+## DevOps
 
-Database
+* Docker
+* Render (Backend hosting)
+* Vercel (Frontend hosting)
 
-    PostgreSQL
+## Tools
 
-Web Server
+* Alembic (migrations)
+* Axios (frontend API calls)
 
-    Nginx
+---
 
-DevOps
+# 📂 Project Structure
 
-    Docker & Docker Compose
-
-
-
-
-# Project Structure
 ```text
 task-manager/
 │
 ├── alembic/
 ├── app/
-│   ├── core/
-│   ├── models/
-│   ├── routers/
-│   ├── schemas/
-│   ├── services/
+│   ├── core/        # config, settings, logging
+│   ├── models/      # database models
+│   ├── routers/     # API routes
+│   ├── schemas/     # request/response schemas
+│   ├── services/    # business logic
 │   ├── db.py
 │   └── main.py
 │
-├── nginx/
-├── .dockerignore
-├── .gitignore
-├── alembic.ini
-├── docker-compose.yml
+├── nginx/           # (used for local/docker setup)
+├── .env.dev
+├── .env.production
+├── .env.vps
 ├── Dockerfile
 ├── entrypoint.sh
 ├── requirements.txt
 └── README.md
 ```
 
+---
 
-# Getting Started   
+# ⚙️ Environment Setup
 
-Prerequisites
+## 🔹 Local Development (.env.dev)
 
-    Docker
+```env
+DATABASE_URL=your_local_db_url
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+EXP_TIME_IN_SEC=3600
+ENV=dev
+```
 
-    Docker Compose
+---
 
-    Git
+## 🔹 Production (Render)
 
-    Postman or Swagger (for API testing)
+👉 Render dashboard me manually set kare:
 
-Clone The Repository
+```env
+DATABASE_URL=your_supabase_url
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+EXP_TIME_IN_SEC=3600
+ENV=production
+```
 
-    git clone https://github.com/your-username/taskmanager.git
-    cd taskmanager
+---
 
-Environment Setup (example values — adjust as needed)
+## ⚠️ Important
 
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=postgres
-    POSTGRES_DB=taskmanager
+* `.env.production` & `.env.vps` future use ke liye hain (VPS / advanced setup)
+* Current deployment → Render ENV variables use karta hai
 
-    DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/taskmanager
+---
 
-    SECRET_KEY=your_generated_secret_key
-    ALGORITHM=HS256
-    EXP_TIME_IN_SEC=3600
+# 🐳 Run Locally (Docker)
 
-    Generate secret key using Python:
+## 1. Clone Repo
 
-        python -c "import secrets; print(secrets.token_hex(32))"
+```bash
+git clone https://github.com/your-username/taskmanager.git
+cd taskmanager
+```
 
+---
 
-Run the Application
+## 2. Run Containers
 
-    Start all services (Postgres, FastAPI, Nginx):
+```bash
+docker compose up --build
+```
 
-        docker compose up --build
+Detached mode:
 
-    Detached mode:
+```bash
+docker compose up -d --build
+```
 
-        docker compose up -d --build
+---
 
-    Verify Containers:
+## 3. Check Running Containers
 
-        docker compose ps
+```bash
+docker compose ps
+```
 
-Access the Application
+---
 
-    🌐 API Base URL: http://localhost
-    📚 Swagger UI: http://localhost/docs
-    🔍 ReDoc: http://localhost/redoc
+# 🌐 Access API (Local)
 
-Health Check
+* API: http://localhost
+* Swagger: http://localhost/docs
+* ReDoc: http://localhost/redoc
 
-    GET /health
+---
 
-    Expected Response:
-        {
-            "status": "OK"
-        }
+# ☁️ Live Deployment
 
-Stop the Application
+## 🔹 Backend (Render)
 
-    docker compose down
+👉 Live URL:
 
-API Testing
+```
+https://task-manager-backend-o278.onrender.com
+```
 
-    You can test APIs using:
+---
 
-    Swagger UI (recommended)
+## 🔹 Frontend (Vercel)
 
-    Postman collection
+👉 Connected with backend using Axios
 
-# API Documentation
+---
 
-Available via Swagger at:
+# 🔐 Authentication Flow
 
-    http://localhost/docs
+1. User login → `/auth/login`
+2. JWT token generate
+3. Token stored in frontend (localStorage)
+4. All protected APIs use:
 
+```http
+Authorization: Bearer <token>
+```
 
+---
 
-# Testing
-Pending
+# 🧪 Testing
 
-# Deployment
-Pending
+* Swagger UI (recommended)
+* Postman
 
-# Contributing 
-Currently not open for contributions.
+---
 
-# License
-License not specified yet.
+# 🛠️ Common Issues & Fixes
 
-# Maintainers
-Jay Valand 
+## ❌ CORS Error
 
+👉 Fix:
 
+* frontend domain add karo (without trailing `/`)
+
+---
+
+## ❌ DB Connection Error
+
+👉 Fix:
+
+* correct Supabase URL use karo
+* session pooler use karo
+
+---
+
+## ❌ Login working in Swagger but not frontend
+
+👉 Fix:
+
+* Axios baseURL check karo
+* request body match karo (username/email)
+
+---
+
+## ❌ Container stuck on startup
+
+👉 Fix:
+
+* `pg_isready` remove karo (external DB case)
+
+---
+
+# 🧠 Key Learnings
+
+* Deployment ≠ just running code
+* Logs are your best friend
+* CORS is the most common issue
+* ENV handling is critical in production
+
+---
+
+# 🚀 Future Improvements
+
+* Refresh token system
+* Role-based auth
+* Rate limiting
+* Redis caching
+* VPS deployment (Docker + Nginx + SSL)
+
+---
+
+# 👨‍💻 Maintainer
+
+**Jay Valand**
+
+---
+
+# 🏁 Final Note
+
+👉 This project is not just a CRUD app —
+👉 It is a **complete production deployment journey**
+
+Built with real debugging, real problems, and real solutions 💯
+
+---
