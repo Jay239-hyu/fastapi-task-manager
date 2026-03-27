@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.task_router import task_router
 from app.routers.user_router import user_router
@@ -12,11 +13,11 @@ setup_logging()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    #  Startup
+    # Startup
     if settings.ENV == "dev":
         debug_config()
 
-    yield  #  app runs here
+    yield  # app runs here
 
     # Shutdown (optional)
     print("App shutting down...")
@@ -25,6 +26,21 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.APP_NAME,
     lifespan=lifespan
+)
+
+# CORS CONFIG (IMPORTANT)
+origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://fastapi-task-manager-iota.vercel.app/",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # include routers
